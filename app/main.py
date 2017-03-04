@@ -75,7 +75,10 @@ def move():
     # snake hits nothing
     
     print "on turn ", turn, " we continue in last direction"
-    return direction        
+    return {
+        'move': 'down',
+        'taunt': 'get lit up'
+    }       
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
