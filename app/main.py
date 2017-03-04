@@ -42,25 +42,40 @@ def move():
     print "width" + width
     print "snake coords" + coords
 
-    if coords[0] == [0,0]
-        direction = 'right'
-    if coords[0] == [width, 0]
-        direction = 'down'
-    if coords[0] == [width, height]
-        direction = 'left'
-    if coords[0] == [0, height]
-        direction = 'up'        
+        snakehead = coordinates[0]
     
-    # TODO: Do things with data
-    directions = ['up', 'down', 'left', 'right']
+    print "curr coords: ", coordinates[0]
+    #case snake hits left wall
+    direction = 'east'
 
-    print "direction" + direction
-
-    return {
-        'move': 'left',
-        'taunt': 'battlesnake-python!'
-    }
-
+    snakehead = coords[0]
+    if snakehead[0] == 0:
+        if snakehead[1] == 0:
+            return 'east'
+        print "on turn ", turn, " we hit the left wall and go north"
+        return 'north'
+    #case snake hits right wall
+    if snakehead[0] == width-1:
+        if snakehead[1] == height-1:
+            return 'west'
+        print "on turn ", turn, " we hit the right wall and go south"
+        return 'south'
+    #case snake hits top
+    if snakehead[1] == 0:
+        if snakehead[0] == width-1:
+            return 'south'
+        print "on turn ", turn, " we hit the top and go east"
+        return 'east'
+    #case snake hits bottom
+    if snakehead[1] == height-1:
+        if snakehead[0] == 0:
+            return 'north'
+        print "on turn ", turn, " we hit the bottom and go west"
+        return 'west' 
+    # snake hits nothing
+    
+    print "on turn ", turn, " we continue in last direction"
+    return direction        
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
