@@ -33,12 +33,26 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    height = data[height]
+    width = data[width]
+    coords = snake.coords
+    direction = 'left'
 
+    if coords[0] == [0,0]
+        direction = 'right'
+    if coords[0] == [width, 0]
+        direction = 'down'
+    if coords[0] == [width, height]
+        direction = 'left'
+    if coords[0] == [0, height]
+        direction = 'up'        
+    
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
 
+
     return {
-        'move': random.choice(directions),
+        'move': direction,
         'taunt': 'battlesnake-python!'
     }
 
