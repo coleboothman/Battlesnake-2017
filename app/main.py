@@ -38,6 +38,10 @@ def move():
     coords = snake.coords
     direction = 'left'
 
+    print "height" + height
+    print "width" + width
+    print "snake coords" + coords
+
     if coords[0] == [0,0]
         direction = 'right'
     if coords[0] == [width, 0]
@@ -50,9 +54,10 @@ def move():
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
 
+    print "direction" + direction
 
     return {
-        'move': direction,
+        'move': 'left',
         'taunt': 'battlesnake-python!'
     }
 
