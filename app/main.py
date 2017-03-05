@@ -159,7 +159,7 @@ def move():
 
 
 
-def find_path(mysnakeHead):
+
 
 
 # Expose WSGI app (so gunicorn can find it)
