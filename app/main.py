@@ -1,6 +1,17 @@
+
+#
+#Code referenced from https://github.com/noahspriggs/battlesnake-python/blob/master/app/main.py
+from AStar import *
 import bottle
 import os
 import random
+import math
+import copy
+import sys
+
+SNAKE = 1
+FOOD = 3
+SAFENODE = 5
 
 
 @bottle.route('/static/<path:path>')
@@ -15,7 +26,7 @@ def start():
     board_width = data['width']
     board_height = data['height']
 
-    head_url = 'http://imgur.com/9xI40bH.png' % (
+    head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
@@ -26,59 +37,122 @@ def start():
         'color': '#00FF00',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
-        'name': 'battlesnake-python'
+        'name': 'yes daddy'
     }
 
 
+#prints grid
+def printg(grid):
+	for x in grid:
+		print x
+
+#initialize grid data
+#map fill
+def init(data, thisID):
+	grid = [[0 for col in xrange(data['height'])] for row in xrange(data['width'])]
+	print "************************"
+	print thisID
+	for s in data['snakes']:
+		print "snake id's"
+		print s['id']
+		if s['id'] == thisID:
+			print "FOUND OUR SNAKE"
+			myS = s
+			print s
+
+		for coord in s['coords']:
+			grid[coord[0]][coord[1]] = SNAKE
+
+	
+	for foods in data['food']:
+		grid[foods[0]][foods[1]] = FOOD
+
+	return grid, myS
+
+def direction(start, dest):
+	dx = start[0] - dest[0]
+	dy = start[1] - dest[1]
+
+	if dx == 1:
+		return 'left'
+	
+	elif dx == -1:
+		return 'right'
+
+	elif dy == -1:
+		return 'down'
+	
+	elif dy == 1:
+		return 'up'
+	
+
+
+def getID(data):
+	snake = init(data)
+	id = data['you']
+	return id
+
+def distance(p, q):
+	dx = abs(p[0] - q[0])
+	dy = abs(p[1] - q[1])
+	ans = dx + dy
+	return ans
+
 @bottle.post('/move')
 def move():
-    data = bottle.request.json
-    height = data[height]
-    width = data[width]
-    coords = snake.coords
-    direction = 'left'
 
-    print "height" + height
-    print "width" + width
-    print "snake coords" + coords
+	print "Hello world"
+	data = bottle.request.json
+	OURID = data['you']
+	
 
-        snakehead = coordinates[0]
-    
-    print "curr coords: ", coordinates[0]
-    #case snake hits left wall
-    direction = 'east'
+	grid, mysnake = init(data)
+	print "this is our snake ID"
+	print OURID
+	print "*********************"
 
-    snakehead = coords[0]
-    if snakehead[0] == 0:
-        if snakehead[1] == 0:
-            return 'east'
-        print "on turn ", turn, " we hit the left wall and go north"
-        return 'north'
-    #case snake hits right wall
-    if snakehead[0] == width-1:
-        if snakehead[1] == height-1:
-            return 'west'
-        print "on turn ", turn, " we hit the right wall and go south"
-        return 'south'
-    #case snake hits top
-    if snakehead[1] == 0:
-        if snakehead[0] == width-1:
-            return 'south'
-        print "on turn ", turn, " we hit the top and go east"
-        return 'east'
-    #case snake hits bottom
-    if snakehead[1] == height-1:
-        if snakehead[0] == 0:
-            return 'north'
-        print "on turn ", turn, " we hit the bottom and go west"
-        return 'west' 
-    # snake hits nothing
-    
-    print "on turn ", turn, " we continue in last direction"
-    return {
-        'move': 'down',
-        'taunt': 'get lit up'
-    }       
+	grid, mysnake = init(data, OURID)
+
+	
+	printg(grid)
+	sys.stdout.flush()
+	
+
+	print "mysnake arr"
+	print mysnake
+
+	mysnakeHead = mysnake['coords'][0]
+	mysnakeCoords = mysnake['coords']
+
+	foodList = sorted(data['food'], key = lambda p: distance(p, mysnakeHead))
+	
+	path = None
+	for food in foodList:
+		print food
+		sys.stdout.flush()
+		path = a_star(mysnakeHead, food, grid, mysnakeCoords)	
+		if path != None:
+			print food
+			sys.stdout.flush()
+			break
+		#if path == None:
+			#path = escape()
+			
+	print "PATH"
+	print path
+	sys.stdout.flush()
+	dir = direction(path[0], path[1])
+	
+
+	print dir
+	sys.stdout.flush()
+
+
+	return {
+        'move': dir,
+        'taunt': 'battlesnake-python!'
+    }
+
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
