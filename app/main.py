@@ -135,9 +135,11 @@ def move():
 			print food
 			sys.stdout.flush()
 			break
-		#if path == None:
-			#path = escape()
-			
+		
+				
+
+
+
 	print "PATH"
 	print path
 	sys.stdout.flush()
@@ -152,6 +154,12 @@ def move():
         'move': dir,
         'taunt': 'battlesnake-python!'
     }
+
+
+
+
+
+def find_path(mysnakeHead):
 
 
 # Expose WSGI app (so gunicorn can find it)
