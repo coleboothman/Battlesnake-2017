@@ -1,7 +1,6 @@
-#
-#
-#code from 
-#https://github.com/noahspriggs/battlesnake-python/blob/master/app/AStar.py
+# A * for Battlesnake 2017/2018
+
+
 def printg(grid, name):
     print '%s: [' % name
     for row in grid:
